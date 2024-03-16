@@ -27,6 +27,7 @@ const GamesArena = () => {
     };
 
     fetchData();
+    inputRef.current.focus();
   }, []);
 
   const handleSearch = (event) => {
@@ -57,7 +58,8 @@ const GamesArena = () => {
     setSortBy(event.target.value);
   };
 
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = (event, suggestion) => {
+    event.stopPropagation();
     console.log(suggestion.title);
     setSearchTerm(suggestion.title);
     setShowSuggestions(false); // Hide suggestions after clicking
@@ -67,9 +69,9 @@ const GamesArena = () => {
     setShowSuggestions(true); // Show suggestions when input is focused
   };
 
-  const handleInputBlur = () => {
-    setShowSuggestions(false); // Hide suggestions when input loses focus
-  };
+  // const handleInputBlur = () => {
+  //   setShowSuggestions(false); // Hide suggestions when input loses focus
+  // };
 
   // Filter games based on search term
   const filteredGames = games
@@ -114,7 +116,6 @@ const GamesArena = () => {
           value={searchTerm}
           onChange={handleSearch}
           onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
           ref={inputRef}
         />
         <select onChange={handleSort} className="sort-select">
@@ -129,9 +130,8 @@ const GamesArena = () => {
             <div
               className="suggestion"
               key={index}
-              onClick={(suggestion) => {
-                console.log("Suggestion clicked:", suggestion);
-                handleSuggestionClick(suggestion);
+              onClick={(event) => {
+                handleSuggestionClick(event, suggestion);
               }}
             >
               {suggestion.title}
